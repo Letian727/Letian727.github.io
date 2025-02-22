@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DeepSeek API Demo</title>
+    <style>
+        body { max-width: 600px; margin: 20px auto; padding: 20px; }
+        #response { white-space: pre-wrap; background: #f0f0f0; padding: 10px; }
+        input { width: 300px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>DeepSeek API Demo</h1>
+    
+    <!-- 添加API密钥输入框 -->
+    <div>
+        <label>输入API密钥：</label>
+        <input type="password" id="apiKey" placeholder="sk-xxxxxxxx">
+    </div>
+
+    <button onclick="callDeepSeekAPI()">调用API</button>
+    <div id="response"></div>
+
+    <script>
+        async function callDeepSeekAPI() {
+            const API_KEY = document.getElementById('apiKey').value; // 从输入框获取密钥
+            const API_URL = 'https://api.siliconflow.cn/v1/chat/completions';
+
+            // 检查是否输入密钥
+            if (!API_KEY) {
+                alert('请输入API密钥！');
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+                        messages: [{ role: "user", content: "Hello world" }]
+                    })
+                });
+
+                const data = await response.json();
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('response').textContent = '错误: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
